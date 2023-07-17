@@ -2,7 +2,6 @@ package com.example.presentation.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +73,7 @@ fun CharacterDetailContentView(
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .width(250.dp)
+                    .fillMaxWidth()
                     .padding(16.dp),
                 contentScale = ContentScale.FillWidth,
                 model = characterUiModel.imageUrl,
