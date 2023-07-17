@@ -1,3 +1,5 @@
+package com.example.domain.repository
+
 import android.content.SharedPreferences
 import com.example.data.data_source.CharacterLocalDatasource
 import com.example.data.data_source.CharacterNetworkDatasource
@@ -6,8 +8,6 @@ import com.example.data.dto.CharacterList
 import com.example.data.dto.CharacterListDto
 import com.example.data.dto.Icon
 import com.example.data.dto.RelatedTopicsItem
-import com.example.domain.repository.CharacterListRepository
-import com.example.domain.repository.CharacterListRepositoryImpl
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -71,7 +71,12 @@ class CharacterListRepositoryImplTest {
     fun `getCharacterList should return stored characters if not expired`() = runTest {
         // Arrange
         val storedCharacterList = createCharacterList()
-        coEvery { sharedPreferences.getInt(any(), any()) } returns (System.currentTimeMillis() / 1000).toInt()
+        coEvery {
+            sharedPreferences.getInt(
+                any(),
+                any()
+            )
+        } returns (System.currentTimeMillis() / 1000).toInt()
         coEvery { characterLocalDatasource.retrieveCharacters() } returns storedCharacterList
 
         // Act
@@ -99,7 +104,10 @@ class CharacterListRepositoryImplTest {
         val result = characterListRepository.getCharacterList().first()
 
         // Assert
-        assertEquals(Result.failure<CharacterListDto>(Throwable("Network error")).toString(), result.toString())
+        assertEquals(
+            Result.failure<CharacterListDto>(Throwable("Network error")).toString(),
+            result.toString()
+        )
         coVerify(exactly = 1) {
             characterNetworkDatasource.getCharacterList()
         }
