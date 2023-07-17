@@ -20,7 +20,7 @@ fun CharacterListDto.toDomain() = CharacterList(
             description = it.text.toDescription(),
             imageUrl = it.icon?.url.toImageUrl()
         )
-    } ?: emptyList()
+    }?.distinctBy { it.title } ?: emptyList()
 )
 
 private fun String?.toTitle(): String = this?.substringBefore(" -") ?: ""

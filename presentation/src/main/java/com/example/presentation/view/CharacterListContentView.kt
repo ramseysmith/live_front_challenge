@@ -33,7 +33,7 @@ fun CharacterListContentView(
         item {
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "Simpsons Characters",
+                text = "The Wire Characters",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
             )

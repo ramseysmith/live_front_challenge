@@ -36,22 +36,25 @@ class CharacterListRepositoryImpl(
                 onFailure = { Result.failure(it) },
                 onSuccess = { dto ->
                     val characterList = dto.toDomain()
-                    if (characterList.characters.isNotEmpty()) {
-                        characterLocalDatasource.deleteAllCharactersFromDatabase()
-                        characterLocalDatasource.storeCharacters(
-                            characterList = characterList
-                        )
-                        sharedPreferences
-                            .edit()
-                            .putInt(
-                                LAST_CHARACTER_UPDATE_KEY,
-                                (System.currentTimeMillis() / 1000).toInt()
+                    characterList.characters.distinctBy { it.title }.let {
+                        if (characterList.characters.isNotEmpty()) {
+                            characterLocalDatasource.deleteAllCharactersFromDatabase()
+                            characterLocalDatasource.storeCharacters(
+                                characterList = characterList
                             )
-                            .apply()
-                        Result.success(characterList)
-                    } else {
-                        Result.failure(Throwable("Empty character list returned by "))
+                            sharedPreferences
+                                .edit()
+                                .putInt(
+                                    LAST_CHARACTER_UPDATE_KEY,
+                                    (System.currentTimeMillis() / 1000).toInt()
+                                )
+                                .apply()
+                            Result.success(characterList)
+                        } else {
+                            Result.failure(Throwable("Empty character list returned by "))
+                        }
                     }
+
                 }
             )
         } else {
