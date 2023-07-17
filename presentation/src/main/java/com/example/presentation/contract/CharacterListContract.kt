@@ -16,6 +16,7 @@ sealed class CharacterListAction {
         val navController: NavController,
         val name: String
     ) : CharacterListAction()
+    object Init: CharacterListAction()
 }
 
 data class CharacterUiModel(

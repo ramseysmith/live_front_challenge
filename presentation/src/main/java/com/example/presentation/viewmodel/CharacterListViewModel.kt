@@ -22,7 +22,18 @@ class CharacterListViewModel @Inject constructor(
         MutableStateFlow(CharacterListState.Loading)
     val characterListState: StateFlow<CharacterListState> = _characterListState
 
-    init {
+    fun dispatchAction(characterListAction: CharacterListAction) {
+        when (characterListAction) {
+            is CharacterListAction.CharacterClickedAction -> processCharacterClicked(
+                navController = characterListAction.navController,
+                name = characterListAction.name
+            )
+
+            CharacterListAction.Init -> processInit()
+        }
+    }
+
+    private fun processInit() {
         viewModelScope.launch {
             getCharacters().collect {
                 it.fold(
@@ -44,15 +55,6 @@ class CharacterListViewModel @Inject constructor(
                     }
                 )
             }
-        }
-    }
-
-    fun dispatchAction(characterListAction: CharacterListAction) {
-        when (characterListAction) {
-            is CharacterListAction.CharacterClickedAction -> processCharacterClicked(
-                navController = characterListAction.navController,
-                name = characterListAction.name
-            )
         }
     }
 

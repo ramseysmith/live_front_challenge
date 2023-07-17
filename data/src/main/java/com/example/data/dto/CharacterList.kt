@@ -3,11 +3,20 @@ package com.example.data.dto
 import com.example.data.constants.DataConstants
 
 
-class CharacterList(
-    val characters: List<Character>
-)
+data class CharacterList(val characters: List<Character>) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CharacterList) return false
 
-class Character(
+        return characters == other.characters
+    }
+
+    override fun hashCode(): Int {
+        return characters.hashCode()
+    }
+}
+
+data class Character(
     val title: String,
     val description: String,
     val imageUrl: String,
