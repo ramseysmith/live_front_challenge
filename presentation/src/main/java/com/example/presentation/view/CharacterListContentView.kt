@@ -56,8 +56,7 @@ fun CharacterListContentView(
                     AsyncImage(
                         modifier = Modifier
                             .padding(top = 16.dp, bottom = 16.dp, start = 32.dp, end = 16.dp)
-                            .height(70.dp)
-                            .width(70.dp),
+                            .fillMaxWidth(),
                         model = it.imageUrl,
                         contentScale = ContentScale.Fit,
                         contentDescription = "image of ${it.name}",
