@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -17,9 +16,7 @@ class CharacterNetworkDatasourceModule {
     @Singleton
     fun provideCharacterListNetworkDatasource(
         characterApi: CharacterApi,
-        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
     ): CharacterNetworkDatasource = CharacterNetworkDatasource(
         characterApi = characterApi,
-        coroutineDispatcher = coroutineDispatcher
     )
 }
