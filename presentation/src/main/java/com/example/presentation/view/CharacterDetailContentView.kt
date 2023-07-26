@@ -1,10 +1,11 @@
 package com.example.presentation.view
 
-import androidx.compose.foundation.Image
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -80,28 +82,60 @@ fun CharacterDetailContentView(
 
             }
         }
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.FillWidth,
-                model = characterUiModel.imageUrl,
-                contentDescription = "image of ${characterUiModel.name}",
-                error = painterResource(R.drawable.baseline_person_24)
-            )
-            Text(
-                text = characterUiModel.shortDescription,
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .padding(16.dp),
-            )
+        when (LocalConfiguration.current.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                Row(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(4F)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.FillWidth,
+                        model = characterUiModel.imageUrl,
+                        contentDescription = "image of ${characterUiModel.name}",
+                        error = painterResource(R.drawable.baseline_person_24)
+                    )
+                    Text(
+                        text = characterUiModel.shortDescription,
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .weight(3F)
+                            .padding(16.dp),
+                    )
+                }
+            }
+
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.FillWidth,
+                        model = characterUiModel.imageUrl,
+                        contentDescription = "image of ${characterUiModel.name}",
+                        error = painterResource(R.drawable.baseline_person_24)
+                    )
+                    Text(
+                        text = characterUiModel.shortDescription,
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .padding(16.dp),
+                    )
+                }
+            }
         }
     }
 }
