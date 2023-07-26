@@ -13,6 +13,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -72,10 +73,10 @@ class CharacterListViewModelTest {
 
     @Test
     fun `viewModelScope launch should emit Error state when characters retrieval fails`() {
-        runTest(coroutineScopeRule.dispatcher) {
+        runBlocking {
             // Arrange
             val expectedErrorState = CharacterListState.Error
-            coEvery { getCharacters() } returns Result.failure(Throwable("Error"))
+            coEvery { getCharacters() } returns Result.failure(Exception())
             viewModel = CharacterListViewModel(getCharacters)
             // Act
             viewModel.characterListState.test {
