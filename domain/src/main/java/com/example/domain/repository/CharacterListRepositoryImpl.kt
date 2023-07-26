@@ -8,25 +8,22 @@ import com.example.data.data_source.CharacterNetworkDatasource
 import com.example.data.dto.Character
 import com.example.data.dto.CharacterList
 import com.example.data.dto.toDomain
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class CharacterListRepositoryImpl(
     private val characterNetworkDatasource: CharacterNetworkDatasource,
     private val characterLocalDatasource: CharacterLocalDatasource,
     private val sharedPreferences: SharedPreferences
 ) : CharacterListRepository {
-    override suspend fun getCharacterList(): Flow<Result<CharacterList>> {
-        return flow { emit(acquireCharacters()) }
-    }
+    override suspend fun getCharacterList(): Result<CharacterList> = acquireCharacters()
 
-    override suspend fun getLastFetchedCharacters(): Flow<CharacterList> {
-        return flow { emit(characterLocalDatasource.retrieveCharacters()) }
-    }
 
-    override suspend fun getCharacterByName(name: String): Flow<Result<Character>> {
-        return flow { emit(characterLocalDatasource.getCharacterByName(name = name)) }
-    }
+    override suspend fun getLastFetchedCharacters(): CharacterList =
+        characterLocalDatasource.retrieveCharacters()
+
+
+    override suspend fun getCharacterByName(name: String): Result<Character> =
+        characterLocalDatasource.getCharacterByName(name = name)
+
 
     private suspend fun acquireCharacters(): Result<CharacterList> {
         val currentTime = (System.currentTimeMillis() / 1000).toInt()

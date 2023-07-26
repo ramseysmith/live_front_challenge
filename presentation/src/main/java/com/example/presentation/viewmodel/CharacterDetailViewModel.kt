@@ -35,24 +35,22 @@ class CharacterDetailViewModel @Inject constructor(
 
     private fun processInit(characterName: String) {
         viewModelScope.launch {
-            getCharacterByName(name = characterName).collect {
-                it.fold(
-                    onFailure = {
-                        _characterDetailState.tryEmit(CharacterDetailState.Error)
-                    },
-                    onSuccess = { character ->
-                        _characterDetailState.tryEmit(
-                            CharacterDetailState.CharacterDetailContent(
-                                character = CharacterUiModel(
-                                    name = character.title,
-                                    shortDescription = character.description,
-                                    imageUrl = character.imageUrl
-                                )
+            getCharacterByName(name = characterName).fold(
+                onFailure = {
+                    _characterDetailState.tryEmit(CharacterDetailState.Error)
+                },
+                onSuccess = { character ->
+                    _characterDetailState.tryEmit(
+                        CharacterDetailState.CharacterDetailContent(
+                            character = CharacterUiModel(
+                                name = character.title,
+                                shortDescription = character.description,
+                                imageUrl = character.imageUrl
                             )
                         )
-                    }
-                )
-            }
+                    )
+                }
+            )
         }
     }
 }

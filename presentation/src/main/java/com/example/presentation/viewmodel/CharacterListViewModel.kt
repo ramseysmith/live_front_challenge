@@ -35,26 +35,25 @@ class CharacterListViewModel @Inject constructor(
 
     private fun processInit() {
         viewModelScope.launch {
-            getCharacters().collect {
-                it.fold(
-                    onFailure = {
-                        _characterListState.tryEmit(CharacterListState.Error)
-                    },
-                    onSuccess = { characterList ->
-                        _characterListState.tryEmit(
-                            CharacterListState.Content(
-                                characters = characterList.characters.map { character ->
-                                    CharacterUiModel(
-                                        name = character.title,
-                                        shortDescription = character.description,
-                                        imageUrl = character.imageUrl
-                                    )
-                                }
-                            )
+            getCharacters().fold(
+                onFailure = {
+                    _characterListState.tryEmit(CharacterListState.Error)
+                },
+                onSuccess = { characterList ->
+                    _characterListState.tryEmit(
+                        CharacterListState.Content(
+                            characters = characterList.characters.map { character ->
+                                CharacterUiModel(
+                                    name = character.title,
+                                    shortDescription = character.description,
+                                    imageUrl = character.imageUrl
+                                )
+                            }
                         )
-                    }
-                )
-            }
+                    )
+                }
+            )
+
         }
     }
 
