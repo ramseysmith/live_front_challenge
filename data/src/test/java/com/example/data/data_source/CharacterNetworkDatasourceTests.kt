@@ -7,7 +7,6 @@ import com.example.data.dto.RelatedTopicsItem
 import com.example.data.util.DataTestConstants.MOCK_TEXT
 import com.example.data.util.MainCoroutineScopeRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -33,9 +32,9 @@ class CharacterNetworkDataSourceTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         characterNetworkDataSource =
-            CharacterNetworkDatasource(characterApi, coroutineScopeRule.dispatcher)
+            CharacterNetworkDatasource(characterApi)
     }
 
     @Test
@@ -64,7 +63,7 @@ class CharacterNetworkDataSourceTest {
 
     @Test
     fun `getCharacterList should return Failure with the correct error message when the API call is not successful`() =
-        runBlocking {
+        runTest(coroutineScopeRule.dispatcher) {
             // Mock unsuccessful API response
             val errorResponseBody = "Error message".toResponseBody(null)
             val response = Response.error<CharacterListDto>(400, errorResponseBody)
