@@ -29,6 +29,42 @@ class CharacterListViewModel @Inject constructor(
                     _characterListState.tryEmit(CharacterListState.Error)
                 },
                 onSuccess = { characterList ->
+//                    _characterListState.tryEmit(
+//                        CharacterListState.Content(
+//                            characters = characterList.characters.map { character ->
+//                                CharacterUiModel(
+//                                    name = character.title,
+//                                    shortDescription = character.description,
+//                                    imageUrl = character.imageUrl
+//                                )
+//                            }
+//                        )
+//                    )
+                    _characterListState.tryEmit(CharacterListState.Error)
+                }
+            )
+
+        }
+    }
+
+    fun dispatchAction(characterListAction: CharacterListAction) {
+        when (characterListAction) {
+            is CharacterListAction.CharacterClickedAction -> processCharacterClicked(
+                navController = characterListAction.navController,
+                name = characterListAction.name
+            )
+
+            CharacterListAction.Refresh -> processRefresh()
+        }
+    }
+
+    private fun loadCharactersAndUpdateState() {
+        viewModelScope.launch {
+            getCharacters().fold(
+                onFailure = {
+                    _characterListState.tryEmit(CharacterListState.Error)
+                },
+                onSuccess = { characterList ->
                     _characterListState.tryEmit(
                         CharacterListState.Content(
                             characters = characterList.characters.map { character ->
@@ -42,19 +78,12 @@ class CharacterListViewModel @Inject constructor(
                     )
                 }
             )
-
         }
     }
-
-    fun dispatchAction(characterListAction: CharacterListAction) {
-        when (characterListAction) {
-            is CharacterListAction.CharacterClickedAction -> processCharacterClicked(
-                navController = characterListAction.navController,
-                name = characterListAction.name
-            )
-        }
+    private fun processRefresh() {
+        _characterListState.tryEmit(CharacterListState.Loading)
+        loadCharactersAndUpdateState()
     }
-
     private fun processCharacterClicked(navController: NavController, name: String) {
         navController.navigate("character_detail/$name") {
             popUpTo("character_list") { inclusive = false }

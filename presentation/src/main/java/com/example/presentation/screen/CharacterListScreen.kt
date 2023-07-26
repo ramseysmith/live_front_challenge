@@ -1,5 +1,6 @@
 package com.example.presentation.screen
 
+import ErrorView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -7,8 +8,7 @@ import androidx.navigation.NavController
 import com.example.presentation.contract.CharacterListAction
 import com.example.presentation.contract.CharacterListState
 import com.example.presentation.view.CharacterListContentView
-import com.example.presentation.view.CharacterListErrorView
-import com.example.presentation.view.CharacterListLoadingView
+import com.example.presentation.view.LoadingView
 import com.example.presentation.viewmodel.CharacterListViewModel
 
 @Composable
@@ -25,6 +25,11 @@ fun CharacterListScreen(
                     name = it
                 )
             )
+        },
+        refreshAction = {
+            characterListViewModel.dispatchAction(
+                characterListAction = CharacterListAction.Refresh
+            )
         }
     )
 }
@@ -32,7 +37,8 @@ fun CharacterListScreen(
 @Composable
 fun CharacterListStateHandler(
     state: CharacterListState,
-    characterClickedAction: (name: String) -> Unit
+    characterClickedAction: (name: String) -> Unit,
+    refreshAction: () -> Unit,
 ) {
     when (state) {
         is CharacterListState.Content -> CharacterListContentView(
@@ -40,7 +46,10 @@ fun CharacterListStateHandler(
             characterClickedAction = characterClickedAction
         )
 
-        CharacterListState.Error -> CharacterListErrorView()
-        CharacterListState.Loading -> CharacterListLoadingView()
+        CharacterListState.Error -> ErrorView(
+            onRetryClick = refreshAction,
+        )
+
+        CharacterListState.Loading -> LoadingView()
     }
 }

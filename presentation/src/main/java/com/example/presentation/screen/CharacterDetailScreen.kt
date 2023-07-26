@@ -1,5 +1,6 @@
 package com.example.presentation.screen
 
+import ErrorView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -12,8 +13,7 @@ import androidx.navigation.NavController
 import com.example.presentation.contract.CharacterDetailAction
 import com.example.presentation.contract.CharacterDetailState
 import com.example.presentation.view.CharacterDetailContentView
-import com.example.presentation.view.CharacterDetailErrorView
-import com.example.presentation.view.CharacterDetailLoadingView
+import com.example.presentation.view.LoadingView
 import com.example.presentation.viewmodel.CharacterDetailViewModel
 
 @Composable
@@ -56,7 +56,7 @@ fun CharacterDetailStateHandler(
             backClickedAction = onBackClickedAction
         )
 
-        CharacterDetailState.Error -> CharacterDetailErrorView()
-        CharacterDetailState.Loading -> CharacterDetailLoadingView()
+        CharacterDetailState.Error -> ErrorView { }
+        CharacterDetailState.Loading -> LoadingView()
     }
 }

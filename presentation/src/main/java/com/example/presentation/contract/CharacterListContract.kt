@@ -16,6 +16,8 @@ sealed class CharacterListAction {
         val navController: NavController,
         val name: String
     ) : CharacterListAction()
+
+    object Refresh: CharacterListAction()
 }
 
 data class CharacterUiModel(
