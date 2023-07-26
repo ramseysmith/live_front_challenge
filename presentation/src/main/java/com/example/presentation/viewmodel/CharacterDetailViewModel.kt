@@ -26,7 +26,13 @@ class CharacterDetailViewModel @Inject constructor(
         when (characterDetailAction) {
             is CharacterDetailAction.Init -> processInit(characterName = characterDetailAction.characterName)
             is CharacterDetailAction.BackClickedAction -> processBackClickedAction(navController = characterDetailAction.navController)
+            is CharacterDetailAction.Refresh -> processRefresh(characterName = characterDetailAction.characterName)
         }
+    }
+
+    private fun processRefresh(characterName: String) {
+        _characterDetailState.tryEmit(CharacterDetailState.Loading)
+        loadCharacterDetailsAndUpdateState(characterName)
     }
 
     private fun processBackClickedAction(navController: NavController) {
@@ -34,10 +40,16 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     private fun processInit(characterName: String) {
+        loadCharacterDetailsAndUpdateState(characterName)
+    }
+
+    private fun loadCharacterDetailsAndUpdateState(characterName: String) {
         viewModelScope.launch {
             getCharacterByName(name = characterName).fold(
                 onFailure = {
-                    _characterDetailState.tryEmit(CharacterDetailState.Error)
+                    _characterDetailState.tryEmit(
+                        CharacterDetailState.Error(failedCharacterName = characterName)
+                    )
                 },
                 onSuccess = { character ->
                     _characterDetailState.tryEmit(

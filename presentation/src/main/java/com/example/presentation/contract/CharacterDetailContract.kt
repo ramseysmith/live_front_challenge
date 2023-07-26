@@ -4,7 +4,10 @@ import androidx.navigation.NavController
 
 sealed class CharacterDetailState {
     object Loading : CharacterDetailState()
-    object Error : CharacterDetailState()
+    class Error(
+        val failedCharacterName: String
+    ) : CharacterDetailState()
+
     class CharacterDetailContent(
         val character: CharacterUiModel
     ) : CharacterDetailState()
@@ -12,6 +15,10 @@ sealed class CharacterDetailState {
 
 sealed class CharacterDetailAction {
     class Init(
+        val characterName: String
+    ) : CharacterDetailAction()
+
+    class Refresh(
         val characterName: String
     ) : CharacterDetailAction()
 

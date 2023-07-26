@@ -41,6 +41,13 @@ fun CharacterDetailScreen(
             characterDetailViewModel.dispatchAction(
                 characterDetailAction = CharacterDetailAction.BackClickedAction(navController = navController)
             )
+        },
+        refreshAction = {
+            characterDetailViewModel.dispatchAction(
+                characterDetailAction = CharacterDetailAction.Refresh(
+                    characterName = characterName
+                )
+            )
         }
     )
 }
@@ -48,7 +55,8 @@ fun CharacterDetailScreen(
 @Composable
 fun CharacterDetailStateHandler(
     state: CharacterDetailState,
-    onBackClickedAction: () -> Unit
+    onBackClickedAction: () -> Unit,
+    refreshAction: () -> Unit,
 ) {
     when (state) {
         is CharacterDetailState.CharacterDetailContent -> CharacterDetailContentView(
@@ -56,7 +64,10 @@ fun CharacterDetailStateHandler(
             backClickedAction = onBackClickedAction
         )
 
-        CharacterDetailState.Error -> ErrorView { }
+        is CharacterDetailState.Error -> ErrorView(
+            onRetryClick = refreshAction
+        )
+
         CharacterDetailState.Loading -> LoadingView()
     }
 }

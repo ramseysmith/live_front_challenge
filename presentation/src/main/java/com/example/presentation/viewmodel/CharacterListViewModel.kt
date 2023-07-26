@@ -23,28 +23,7 @@ class CharacterListViewModel @Inject constructor(
     val characterListState: StateFlow<CharacterListState> = _characterListState
 
     init {
-        viewModelScope.launch {
-            getCharacters().fold(
-                onFailure = {
-                    _characterListState.tryEmit(CharacterListState.Error)
-                },
-                onSuccess = { characterList ->
-//                    _characterListState.tryEmit(
-//                        CharacterListState.Content(
-//                            characters = characterList.characters.map { character ->
-//                                CharacterUiModel(
-//                                    name = character.title,
-//                                    shortDescription = character.description,
-//                                    imageUrl = character.imageUrl
-//                                )
-//                            }
-//                        )
-//                    )
-                    _characterListState.tryEmit(CharacterListState.Error)
-                }
-            )
-
-        }
+        loadCharactersAndUpdateState()
     }
 
     fun dispatchAction(characterListAction: CharacterListAction) {
@@ -80,10 +59,12 @@ class CharacterListViewModel @Inject constructor(
             )
         }
     }
+
     private fun processRefresh() {
         _characterListState.tryEmit(CharacterListState.Loading)
         loadCharactersAndUpdateState()
     }
+
     private fun processCharacterClicked(navController: NavController, name: String) {
         navController.navigate("character_detail/$name") {
             popUpTo("character_list") { inclusive = false }
