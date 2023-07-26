@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -22,7 +22,7 @@ fun CharacterDetailScreen(
     navController: NavController,
     characterName: String,
 ) {
-    var firstTime by rememberSaveable {
+    var firstTime by remember {
         mutableStateOf(true)
     }
     LaunchedEffect(key1 = Unit) {

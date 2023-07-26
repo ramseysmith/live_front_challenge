@@ -1,12 +1,7 @@
 package com.example.presentation.screen
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.presentation.contract.CharacterListAction
@@ -21,17 +16,6 @@ fun CharacterListScreen(
     characterListViewModel: CharacterListViewModel = hiltViewModel(),
     navController: NavController,
 ) {
-    var firstTime by rememberSaveable {
-        mutableStateOf(true)
-    }
-    LaunchedEffect(key1 = Unit) {
-        if (firstTime) {
-            characterListViewModel.dispatchAction(
-                characterListAction = CharacterListAction.Init
-            )
-            firstTime = false
-        }
-    }
     CharacterListStateHandler(
         state = characterListViewModel.characterListState.collectAsState().value,
         characterClickedAction = {

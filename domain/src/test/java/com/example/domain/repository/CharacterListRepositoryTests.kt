@@ -13,7 +13,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -55,7 +54,7 @@ class CharacterListRepositoryImplTest {
         )
 
         // Act
-        val result = characterListRepository.getCharacterList().first()
+        val result = characterListRepository.getCharacterList()
 
         // Assert
         assertEquals(expectedResult, result)
@@ -80,7 +79,7 @@ class CharacterListRepositoryImplTest {
         coEvery { characterLocalDatasource.retrieveCharacters() } returns storedCharacterList
 
         // Act
-        val result = characterListRepository.getCharacterList().first()
+        val result = characterListRepository.getCharacterList()
 
         // Assert
         assertEquals(Result.success(storedCharacterList), result)
@@ -101,7 +100,7 @@ class CharacterListRepositoryImplTest {
         coEvery { sharedPreferences.getInt(any(), any()) } returns 0
         coEvery { characterNetworkDatasource.getCharacterList() } returns expectedResult
         // Act
-        val result = characterListRepository.getCharacterList().first()
+        val result = characterListRepository.getCharacterList()
 
         // Assert
         assertEquals(
@@ -120,7 +119,7 @@ class CharacterListRepositoryImplTest {
         coEvery { characterLocalDatasource.retrieveCharacters() } returns storedCharacterList
 
         // Act
-        val result = characterListRepository.getLastFetchedCharacters().first()
+        val result = characterListRepository.getLastFetchedCharacters()
 
         // Assert
         assertEquals(storedCharacterList, result)
@@ -139,7 +138,7 @@ class CharacterListRepositoryImplTest {
         val expectedResult = Result.success(storedCharacter)
         coEvery { characterLocalDatasource.getCharacterByName(characterName) } returns expectedResult
         // Act
-        val result = characterListRepository.getCharacterByName(characterName).first()
+        val result = characterListRepository.getCharacterByName(characterName)
         // Assert
         assertEquals(expectedResult, result)
         coVerify(exactly = 1) { characterLocalDatasource.getCharacterByName(characterName) }

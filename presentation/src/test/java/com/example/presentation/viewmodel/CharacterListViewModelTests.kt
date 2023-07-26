@@ -13,13 +13,11 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 class CharacterListViewModelTest {
@@ -38,14 +36,13 @@ class CharacterListViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = CharacterListViewModel(getCharacters)
     }
 
     @Test
     fun `viewModelScope launch should emit Loading state initially`() {
         // Arrange
         val expectedInitialState = CharacterListState.Loading
-
+        viewModel = CharacterListViewModel(getCharacters)
         // Assert
         assertEquals(expectedInitialState, viewModel.characterListState.value)
     }
@@ -64,12 +61,10 @@ class CharacterListViewModelTest {
                     )
                 }
             )
-            coEvery { getCharacters() } returns flowOf(Result.success(characterList))
-
+            coEvery { getCharacters() } returns (Result.success(characterList))
+            viewModel = CharacterListViewModel(getCharacters)
             // Act
             viewModel.characterListState.test {
-                assertIs<CharacterListState.Loading>(awaitItem())
-                viewModel.dispatchAction(characterListAction = CharacterListAction.Init)
                 assertEquals(expectedContentState, awaitItem())
             }
         }
@@ -80,12 +75,10 @@ class CharacterListViewModelTest {
         runTest(coroutineScopeRule.dispatcher) {
             // Arrange
             val expectedErrorState = CharacterListState.Error
-            coEvery { getCharacters() } returns flowOf(Result.failure(Throwable("Error")))
-
+            coEvery { getCharacters() } returns Result.failure(Throwable("Error"))
+            viewModel = CharacterListViewModel(getCharacters)
             // Act
             viewModel.characterListState.test {
-                assertIs<CharacterListState.Loading>(awaitItem())
-                viewModel.dispatchAction(characterListAction = CharacterListAction.Init)
                 assertEquals(expectedErrorState, awaitItem())
             }
         }
@@ -99,7 +92,7 @@ class CharacterListViewModelTest {
             navController = navController,
             name = characterName
         )
-
+        viewModel = CharacterListViewModel(getCharacters)
         // Act
         viewModel.dispatchAction(characterClickedAction)
 
