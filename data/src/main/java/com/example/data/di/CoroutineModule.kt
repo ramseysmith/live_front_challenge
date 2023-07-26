@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
 
+// Attributed to https://www.valueof.io/blog/injecting-coroutines-dispatchers-with-dagger
 @Module
 @InstallIn(SingletonComponent::class)
 class CoroutineModule {

@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
+// Attributed to https://developer.android.com/kotlin/coroutines/test#setting-main-dispatcher
 @ExperimentalCoroutinesApi
 class MainCoroutineScopeRule(
     val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
@@ -16,12 +17,6 @@ class MainCoroutineScopeRule(
 
     override fun starting(description: Description?) {
         super.starting(description)
-        // If your codebase allows the injection of other dispatchers like
-        // Dispatchers.Default and Dispatchers.IO, consider injecting all of them here
-        // and renaming this class to `CoroutineScopeRule`
-        //
-        // All injected dispatchers in a test should point to a single instance of
-        // TestCoroutineDispatcher.
         Dispatchers.setMain(dispatcher)
     }
 
